@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Car Rental - Home Page</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We"
+	crossorigin="anonymous">
+    <style>
+        .navCenter{
+            margin: auto 25%;
+        }
+        .tableContainer{
+			max-width:60%;
+			margin:auto 20%;
+		}
+		.card{
+			display: inline-block;
+			margin:10px auto;
+		}
+		.cardContainer{
+			display: inline-block;
+		}
+        
+    </style>
+</head>
+<body>
+	
+	<!-- Navbar for admin home page -->
+	<nav th:if="${authority.equals('ROLE_ADMIN')}" class="navbar navbar-expand-lg navbar-dark bg-success">
+		<div class="container">
+			<a class="navbar-brand" th:href="@{/admin}">CarPeSwaar</a>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarNav"
+				aria-controls="navbarNav" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav navCenter">
+				<li class="nav-item">
+						<a class="nav-link" th:href="@{/admin}">Home</a>
+					</li> 
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/admin/viewCars}">View Cars</a>
+					</li>
+					
+				
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/admin/viewDealers}">View Dealers</a>
+					</li>
+					
+				</ul>
+			</div>
+			<span sec:authorize="isAuthenticated()">
+				<a class="btn btn-sm btn-danger" th:href="@{/logout}">Logout</a>
+			</span>
+		</div>
+	</nav>
+	
+	<!-- Navbar for renter home page -->
+	<nav th:if="${authority.equals('ROLE_DEALER')}" class="navbar navbar-expand-lg navbar-dark bg-success">
+		<div class="container">
+			<a class="navbar-brand" th:href="@{/dealer}">CarPeSwaar</a>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarNav"
+				aria-controls="navbarNav" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav navCenter">
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/dealer}">Home</a>
+					</li> 
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/dealer/viewCars}">View Cars</a>
+					</li> 
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/dealer/rentedCars}">Rented Cars</a>
+					</li> 
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/dealer/addCar}">Add Car</a>
+					</li>
+					
+				</ul>
+			</div>
+			<span sec:authorize="isAuthenticated()">
+				<a class="btn btn-sm btn-danger" th:href="@{/logout}">Logout</a>
+			</span>
+		</div>
+	</nav>
+	
+	<!-- Navbar for customer home page -->
+	<nav th:if="${authority.equals('ROLE_CUSTOMER')}" class="navbar navbar-expand-lg navbar-dark bg-success">
+		<div class="container">
+			<a class="navbar-brand" th:href="@{/customer}">CarPeSwaar</a>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarNav"
+				aria-controls="navbarNav" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav navCenter">
+					
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/customer}">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/customer/rentedCars}">Rented Cars</a>
+					</li>
+					
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/customer/availableCars}">Available Cars</a>
+					</li>
+					
+				</ul>
+			</div>
+			<span sec:authorize="isAuthenticated()">
+				<a class="btn btn-sm btn-danger" th:href="@{/logout}">Logout</a>
+			</span>
+		</div>
+	</nav>
+	
+	
+	<main class="container tableContainer">
+	
+	<div th:each="car : ${cars}" class="cardContainer">
+		<div class="card" style="width: 18rem;">
+			<img class="card-img-top" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.vjYmzf3dRi3Jc1sjwu8vdgHaE8%26pid%3DApi&f=1">
+			<div class="card-body">
+			 <div class="row">
+				 <span class="col-md-2"><h6 th:text="${car.getId()}">></h6></span>
+				 <span class="col-md-5"><h6 th:text="${car.getBrand()}">></h6></span>
+				 <span class="col-md-5"><h6 th:text="${car.getModel()}">></h6></span>
+			 </div>
+			 <div class="row" style="margin: 5px 10%;">
+			 	<span class="col-md-12"><h6 th:text="${car.getRegistNum()}" style="text-align:center;"></h6></span>
+			 </div>
+			 <div class="row" style="margin: 5px 10%;">
+				 <span class="col-md-6" th:if="${authority.equals('ROLE_DEALER')}"><a th:href="@{/dealer/editCar/}+${car.getId()}">Edit</a></span>
+				 <span class="col-md-6" th:if="${authority.equals('ROLE_ADMIN')}"><a th:href="@{/admin/editCar/}+${car.getId()}">Edit</a></span>
+				 <span class="col-md-6" th:if="${authority.equals('ROLE_DEALER')}">
+				 <form th:action="@{/dealer/deleteCar/} + ${car.getId()}" method="POST">
+						<button type="SUBMIT" class="btn btn-sm btn-danger">Delete</button>
+					</form>
+				 </span>
+				 <span class="col-md-6" th:if="${authority.equals('ROLE_ADMIN')}">
+				 <form th:action="@{/admin/deleteCar/} + ${car.getId()}" method="POST">
+						<button type="SUBMIT" class="btn btn-sm btn-danger">Delete</button>
+					</form>
+				 </span>
+			</div>
+			
+			</div>
+		  </div>
+	</div>
+		
+		
+		
+		<div th:if="${totalPages > 1}">
+			<div class="row">
+				<div class="col-sm-7">Total Cars: [[${totalItems}]]</div>
+				<div class="col-sm-2">
+					<span th:each="i: ${#numbers.sequence(1, totalPages)}">
+					 <span th:if="${currentPage != i}">
+					  <a th:if="${authority.equals('ROLE_CUSTOMER')}" th:href="@{'/customer/viewCars/' + ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
+					 </span>
+					 
+					 
+					 <span th:if="${currentPage != i}">
+					  <a th:if="${authority.equals('ROLE_DEALER')}" th:href="@{'/dealer/viewCars/' + ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
+					 </span>
+					 <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp;&nbsp;
+					 <span th:if="${currentPage != i}">
+					  <a th:if="${authority.equals('ROLE_ADMIN')}" th:href="@{'/admin/viewCars/' + ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
+					 </span>
+					</span>
+				</div>
+				
+				<div class="col-sm-1" th:if="${currentPage < totalPages}">
+					<a th:if="${authority.equals('ROLE_CUSTOMER')}"
+						th:href="@{'/customer/viewCars/' + ${currentPage + 1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Next</a>
+					<a th:if="${authority.equals('ROLE_DEALER')}"
+						th:href="@{'/dealer/viewCars/' + ${currentPage + 1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Next</a>
+					<a th:if="${authority.equals('ROLE_ADMIN')}"
+						th:href="@{'/admin/viewCars/' + ${currentPage + 1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Next</a>
+					<span th:unless="${currentPage < totalPages}">Next</span>
+				</div>
+				<div class="col-sm-2" th:if="${currentPage < totalPages}">
+					<a th:if="${authority.equals('ROLE_ADMIN')}"
+						th:href="@{'/admin/viewCars/' + ${totalPages}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Last</a>
+					<span th:unless="${currentPage < totalPages}">Last</span>
+				</div>
+				<div class="col-sm-2" th:if="${currentPage < totalPages}">
+					<a th:if="${authority.equals('ROLE_DEALER')}"
+						th:href="@{'/dealer/viewCars/' + ${totalPages}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Last</a>
+					<span th:unless="${currentPage < totalPages}">Last</span>
+				</div>
+				<div class="col-sm-2" th:if="${currentPage < totalPages}">
+					<a th:if="${authority.equals('ROLE_CUSTOMER')}"
+						th:href="@{'/customer/viewCars/' + ${totalPages}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Last</a>
+					<span th:unless="${currentPage < totalPages}">Last</span>
+				</div>
+			</div>
+		</div>
+		
+		 
+		<!--  
+		<div th:if = "${totalPages > 1}">
+			<div class = "row">
+				<div class = "col-sm-7">
+					Total Cars: [[${totalItems}]] 
+				</div>
+				<div class = "col-sm-2">
+					<span th:each="i: ${#numbers.sequence(1, totalPages)}">
+						<a th:if="${currentPage != i}" th:href="@{'/dealer/manageCars/' + ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
+						<span th:unless="${currentPage != i}">[[${i}]]</span>  &nbsp; &nbsp;
+					</span>
+				</div>
+				<div class = "col-sm-1">
+					<a th:if="${currentPage < totalPages}" th:href="@{'/dealer/manageCars/' + ${currentPage + 1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Next</a>
+					<span th:unless="${currentPage < totalPages}">Next</span>
+				</div>
+				
+				 <div class="col-sm-2">
+    				<a th:if="${currentPage < totalPages}" th:href="@{'/dealer/manageCars/' + ${totalPages}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Last</a>
+					<span th:unless="${currentPage < totalPages}">Last</span>
+   				 </div>
+			</div>
+		</div>
+		-->
+		
+	</main>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+		crossorigin="anonymous"></script>
+</body>
+</html>

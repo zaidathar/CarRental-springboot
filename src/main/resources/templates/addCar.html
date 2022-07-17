@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Add New Car</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We"
+	crossorigin="anonymous">
+    <style>
+        .formContainer{
+            margin:5px 30%;
+            min-width: 100px; 
+        }
+        .btnContainer{
+            margin:5px 45%;
+        }
+        .navCenter{
+        	margin:auto 35%;
+        }
+    </style>
+</head>
+<body>
+	<!-- Navbar for admin home page -->
+	<nav th:if="${authority.equals('ROLE_ADMIN')}" class="navbar navbar-expand-lg navbar-dark bg-success">
+		<div class="container">
+			<a class="navbar-brand" th:href="@{/admin}">CarPeSwaar</a>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarNav"
+				aria-controls="navbarNav" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav navCenter">
+				<li class="nav-item">
+						<a class="nav-link" th:href="@{/admin}">Home</a>
+					</li> 
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/admin/manageCustomers}">View Cars</a>
+					</li>
+				
+				
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/admin/viewDealers}">View Dealers</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/admin/addDealers}">Add Dealers</a>
+					</li>
+					
+				</ul>
+			</div>
+			<span sec:authorize="isAuthenticated()">
+				<a class="btn btn-sm btn-danger" th:href="@{/logout}">Logout</a>
+			</span>
+		</div>
+	</nav>
+	
+	<!-- Navbar for renter home page -->
+	<nav th:if="${authority.equals('ROLE_DEALER')}" class="navbar navbar-expand-lg navbar-dark bg-success">
+		<div class="container">
+			<a class="navbar-brand" th:href="@{/dealer}">CarPeSwaar</a>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarNav"
+				aria-controls="navbarNav" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav navCenter">
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/dealer}">Home</a>
+					</li> 
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/dealer/viewCars}">View Cars</a>
+					</li> 
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/dealer/rentedCars}">Rented Cars</a>
+					</li> 
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/dealer/addCar}">Add Car</a>
+					</li>
+					
+				</ul>
+			</div>
+			<span sec:authorize="isAuthenticated()">
+				<a class="btn btn-sm btn-danger" th:href="@{/logout}">Logout</a>
+			</span>
+		</div>
+	</nav>
+	
+	<!-- Navbar for customer home page -->
+	<nav th:if="${authority.equals('ROLE_CUSTOMER')}" class="navbar navbar-expand-lg navbar-dark bg-success">
+		<div class="container">
+			<a class="navbar-brand" th:href="@{/customer}">CarPeSwaar</a>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarNav"
+				aria-controls="navbarNav" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav navCenter">
+					
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/customer}">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/customer/rentedCars}">Rented Cars</a>
+					</li>
+					
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/customer/availableCars}">Available Cars</a>
+					</li>
+					
+				</ul>
+			</div>
+			<span sec:authorize="isAuthenticated()">
+				<a class="btn btn-sm btn-danger" th:href="@{/logout}">Logout</a>
+			</span>
+		</div>
+	</nav>
+	
+	<main class="container" >
+	
+	<form th:action="@{/dealer/addCar}" method="POST" th:object="${car}" class="">
+	
+			<!-- error message -->
+			<div th:if="${param.error}" class="formContainer">
+				<div 
+					class="alert alert-danger"
+					style="text-align: center !important; display: block;">
+					Something went wrong! Please try again.
+				</div>
+			</div>
+            <div class="formContainer">
+				<label for="brand" class="my-2">Brand</label> 
+					<input
+					type="text" 
+					class="form-control" 
+					id="brand"
+					aria-describedby="emailHelp" 
+					th:field="*{brand}"
+					required>
+			</div>
+			<div class="formContainer">
+				<label for="model" class="my-2">Model</label> 
+					<input
+					type="text" 
+					class="form-control" 
+					id="model"
+					aria-describedby="emailHelp" 
+					th:field="*{model}"
+					required>
+			</div>
+			<div class="formContainer">
+				<label for="registNum" class="my-2">Registration Number</label> 
+				<input
+					type="text" 
+					class="form-control" 
+					id="carType"
+					th:field="*{registNum}"
+					required>
+			</div>
+			
+			<button type="SUBMIT" class="btn text-light btn-secondary btnContainer">Add Car</button>
+		</form>
+		
+		<div class="d-flex justify-content-center">
+			<h5 th:if="${authority.equals('ROLE_DEALER')}"> View cars <a th:href="@{/dealer/viewCars}" class="d-inline-block mx-1"> here </a> </h5>
+				<h5 th:if="${authority.equals('ROLE_CUSTOMER')}"> View cars <a th:href="@{/dealer/viewCars}" class="d-inline-block mx-1"> here </a> </h5>
+		
+		</div>
+		
+	</main>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+		crossorigin="anonymous"></script>
+</body>
+</html>
